@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/PaySys/CardPay.svg?branch=master)](https://travis-ci.org/PaySys/CardPay)
 [![Code Quality](https://scrutinizer-ci.com/g/PaySys/CardPay/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/PaySys/CardPay/)
 [![Code Coverage](https://scrutinizer-ci.com/g/PaySys/CardPay/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/PaySys/CardPay/)
-[![Packagist](https://img.shields.io/packagist/v/PaySys/CardPay.svg)](https://packagist.org/packages/PaySys/CardPay)
+[![Packagist](https://img.shields.io/packagist/v/PaySys/cardpay.svg)](https://packagist.org/packages/PaySys/CardPay)
 
 Library for implement CardPay gateway ([v1.5 with HMAC & ECDSA](http://www.tatrabanka.sk/cardpay/CardPay_technicka_prirucka_HMAC.pdf)) from Tatra Banka in Nette framework.
 
