@@ -1,0 +1,37 @@
+{
+	"name": "paysys/cardpay",
+	"type": "library",
+	"description": "Library for Tatra bank CardPay gateway in Nette framework.",
+	"keywords": ["bank", "gateway", "tatrabank", "cardpay"],
+	"homepage": "https://github.com/PaySys/CardPay",
+	"license": ["MIT"],
+	"authors": [
+		{
+			"name": "Roman Mátyus",
+			"homepage": "http://romiix.org",
+			"email": "romanmatyus@romiix.org"
+		}
+	],
+	"support": {
+		"email": "romanmatyus@romiix.org",
+		"issues": "https://github.com/PaySys/CardPay/issues"
+	},
+	"require": {
+		"php": ">=7.1",
+		"paysys/paysys": "~0.1@dev",
+		"nette/application": "~2.0@dev",
+		"nette/di": "~2.4@dev",
+		"nette/utils": "~2.4@dev"
+	},
+	"require-dev": {
+		"ext-mbstring": "*",
+		"jakub-onderka/php-parallel-lint": "~0.8",
+		"nette/tester": "~1.7@dev",
+		"phpstan/phpstan-nette": "~0.6"
+	},
+	"autoload": {
+		"psr-0": {
+			"PaySys\\CardPay": "src/"
+		}
+	}
+}
