@@ -2,7 +2,6 @@
 
 namespace PaySys\CardPay\Application\UI;
 
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
 use Nette\Http\IRequest;
 use PaySys\CardPay\Security\Response;
