@@ -8,6 +8,15 @@ use Nette\Utils\Strings;
 use PaySys\PaySys\IConfiguration;
 
 
+/**
+ * @method string getMid()
+ * @method string getRurl()
+ * @method string getKey()
+ * @method string getIpc()
+ * @method string getLang()
+ * @method string getMode()
+ * @method string getRem()
+ */
 final class Configuration implements IConfiguration
 {
 
@@ -62,11 +71,6 @@ final class Configuration implements IConfiguration
 		return $this;
 	}
 
-	public function getMid() : string
-	{
-		return $this->mid;
-	}
-
 	public function setRurl($originalRurl) : Configuration
 	{
 		$supportedTypes = ['string', 'array'];
@@ -91,11 +95,6 @@ final class Configuration implements IConfiguration
 		return $this;
 	}
 
-	public function getRurl() : string
-	{
-		return $this->rurl;
-	}
-
 	public function setKey(string $originalKey) : Configuration
 	{
 		$key = $this->getNormalizedKey($originalKey);
@@ -104,11 +103,6 @@ final class Configuration implements IConfiguration
 
 		$this->key = $key;
 		return $this;
-	}
-
-	public function getKey() : string
-	{
-		return $this->key;
 	}
 
 	public function setIpc(string $ipc = NULL) : Configuration
@@ -124,11 +118,6 @@ final class Configuration implements IConfiguration
 		return $this;
 	}
 
-	public function getIpc() : string
-	{
-		return $this->ipc;
-	}
-
 	public function setLang(string $originalLang) : Configuration
 	{
 		$lang = strtolower($originalLang);
@@ -137,11 +126,6 @@ final class Configuration implements IConfiguration
 
 		$this->lang = $lang;
 		return $this;
-	}
-
-	public function getLang() : string
-	{
-		return $this->lang;
 	}
 
 	public function setMode(string $mode) : Configuration
@@ -153,11 +137,6 @@ final class Configuration implements IConfiguration
 		return $this;
 	}
 
-	public function getMode() : string
-	{
-		return $this->mode;
-	}
-
 	public function setRem(string $rem) : Configuration
 	{
 		if (!Nette\Utils\Validators::isEmail($rem))
@@ -165,11 +144,6 @@ final class Configuration implements IConfiguration
 
 		$this->rem = $rem;
 		return $this;
-	}
-
-	public function getRem() : string
-	{
-		return $this->rem;
 	}
 
 	public function setButtonTemplate(string $path) : Configuration
@@ -184,6 +158,11 @@ final class Configuration implements IConfiguration
 	public function getButtonTemplate() : string
 	{
 		return $this->buttonTemplate;
+	}
+
+	public function __call($method, $arguments) : string
+	{
+		return $this->{strtolower(substr($method, 3))};
 	}
 
 	private function getNormalizedKey(string $originalKey) : string
