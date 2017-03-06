@@ -1,6 +1,6 @@
 # PaySys\CardPay
 
-[![Build Status](https://scrutinizer-ci.com/g/PaySys/CardPay/badges/build.png?b=master)](https://scrutinizer-ci.com/g/PaySys/CardPay/)
+[![Build Status](https://travis-ci.org/PaySys/CardPay.svg?branch=master)](https://travis-ci.org/PaySys/CardPay)
 [![Code Quality](https://scrutinizer-ci.com/g/PaySys/CardPay/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/PaySys/CardPay/)
 [![Code Coverage](https://scrutinizer-ci.com/g/PaySys/CardPay/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/PaySys/CardPay/)
 [![Packagist](https://img.shields.io/packagist/v/PaySys/CardPay.svg)](https://packagist.org/packages/PaySys/CardPay)
