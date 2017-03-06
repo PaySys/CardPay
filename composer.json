@@ -19,7 +19,7 @@
 	"require": {
 		"php": ">=7.1",
 		"paysys/paysys": "~0.1@dev",
-		"nette/application": "~2.0@dev",
+		"nette/application": "~2.3@dev",
 		"nette/di": "~2.4@dev",
 		"nette/utils": "~2.4@dev"
 	},
