@@ -60,7 +60,7 @@ class Validator
 	public static function isKey($s) : bool
 	{
 		$hex = '[0-9a-f]{2}';
-		return (is_string($s) && preg_match('/^([\w]{64}|[\w]{128}|(' . $hex . ':){63}' . $hex . ')$/', $s));
+		return (is_string($s) && preg_match('/^(.{64}|.{128}|(' . $hex . ':){63}' . $hex . ')$/', $s));
 	}
 
 	public static function isRurl($s) : bool
