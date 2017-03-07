@@ -32,7 +32,7 @@ class CardPayExtension extends CompilerExtension
 			]);
 
 		$builder->addDefinition($this->prefix('button'))
-			->setImplement('PaySys\PaySys\IButtonFactory')
+			->setImplement('PaySys\CardPay\IButtonFactory')
 			->setFactory('PaySys\PaySys\Button', [
 				'config' => $this->prefix('@config'),
 			]);
