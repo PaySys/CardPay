@@ -78,8 +78,12 @@ Assert::false(Validator::isKey("a"));
 Assert::false(Validator::isKey(new StdClass));
 Assert::false(Validator::isKey("123456789.124"));
 Assert::false(Validator::isKey(123456789.124));
+Assert::false(Validator::isKey(str_repeat("49:", 64) . "49"));
 
 Assert::true(Validator::isKey(Nette\Utils\Random::generate(64)));
+Assert::true(Validator::isKey(Nette\Utils\Random::generate(128)));
+Assert::true(Validator::isKey(str_repeat("49:", 63) . "49"));
+
 
 Assert::false(Validator::isRurl("a"));
 Assert::false(Validator::isRurl(new StdClass));
