@@ -26,10 +26,9 @@
 	},
 	"require-dev": {
 		"ext-mbstring": "*",
-		"jakub-onderka/php-parallel-lint": "~0.8",
-		"nette/tester": "~1.7@dev",
-		"nikic/php-parser": "^3.0.2",
-		"phpstan/phpstan": "dev-master as 0.6.x-dev",
+		"jakub-onderka/php-parallel-lint": "~1.0",
+		"nette/tester": "~2.1",
+		"phpstan/phpstan": "~0.10.6",
 		"phpstan/phpstan-nette": "~0.6"
 	},
 	"autoload": {
