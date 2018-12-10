@@ -35,6 +35,7 @@ script:
     - vendor/bin/tester tests -s -c tests/php-unix.ini -p php $FLAGS
 
 after_script:
+    - curl https://github.com/PaySys/CardPay | grep -o '<img[ ]*src="[^"]*"' | grep -o '"[^"]*"' | grep -o '[^"]*' | grep https://camo.githubusercontent.com | xargs -L1 curl -X PURGE
     - |
         if [[ $TRAVIS_PHP_VERSION == '7.2' ]] && [[ $COMPOSER_EXTRA_ARGS == '' ]]; then
             wget https://scrutinizer-ci.com/ocular.phar
