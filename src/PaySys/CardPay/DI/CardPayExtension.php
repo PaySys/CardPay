@@ -10,7 +10,7 @@ class CardPayExtension extends CompilerExtension
 {
 	const BASE_ROUTE = "CardPay:CardPay:process";
 
-	/** @var [] */
+	/** @var array */
 	private $defaults = [
 		"mid" => "",
 		"rurl" => self::BASE_ROUTE,
