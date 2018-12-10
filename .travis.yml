@@ -24,7 +24,7 @@ before_script:
     - |
         if [[ $TRAVIS_PHP_VERSION == '7.2' ]] && [[ $COMPOSER_EXTRA_ARGS == '' ]]; then
             ./vendor/bin/parallel-lint -e php,phpt --exclude vendor .
-            ./vendor/bin/phpstan analyse -l 4 -c vendor/phpstan/phpstan-nette/extension.neon src tests
+            ./vendor/bin/phpstan analyse -l 5 -c vendor/phpstan/phpstan-nette/extension.neon src tests
             composer create-project nette/code-checker code-checker ~2.4 --no-interaction --prefer-source
             php code-checker/src/code-checker.php -d src
             php code-checker/src/code-checker.php -d tests
