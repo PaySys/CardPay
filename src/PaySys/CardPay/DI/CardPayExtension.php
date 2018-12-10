@@ -29,6 +29,9 @@ class CardPayExtension extends CompilerExtension
 				'mid' => $this->config['mid'],
 				'rurl' => $this->config['rurl'],
 				'key' => $this->config['key'],
+			])
+			->addSetup('setMode', [
+				$this->config['mode'],
 			]);
 
 		$builder->addDefinition($this->prefix('button'))
