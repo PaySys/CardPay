@@ -25,7 +25,7 @@ class CardPayExtension extends CompilerExtension
 		$builder = $this->getContainerBuilder();
 
 		$builder->addDefinition($this->prefix('config'))
-			->setClass('PaySys\CardPay\Configuration', [
+			->setFactory('PaySys\CardPay\Configuration', [
 				'mid' => $this->config['mid'],
 				'rurl' => $this->config['rurl'],
 				'key' => $this->config['key'],
@@ -34,17 +34,18 @@ class CardPayExtension extends CompilerExtension
 				$this->config['mode'],
 			]);
 
-		$builder->addDefinition($this->prefix('button'))
+		$builder->addFactoryDefinition($this->prefix('button'))
 			->setImplement('PaySys\CardPay\IButtonFactory')
+			->getResultDefinition()
 			->setFactory('PaySys\PaySys\Button', [
 				'config' => $this->prefix('@config'),
 			]);
 
 		$builder->addDefinition($this->prefix('request'))
-			->setClass('PaySys\CardPay\Security\Request');
+			->setFactory('PaySys\CardPay\Security\Request');
 
 		$builder->addDefinition($this->prefix('response'))
-			->setClass('PaySys\CardPay\Security\Response');
+			->setFactory('PaySys\CardPay\Security\Response');
 	}
 
 	public function beforeCompile()
