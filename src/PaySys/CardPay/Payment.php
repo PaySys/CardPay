@@ -19,6 +19,9 @@ class Payment implements IPayment
 	/** @var string */
 	protected $name;
 
+	/** @var bool */
+	protected $tpay = false;
+
 	/** @var string */
 	protected $timestamp;
 
@@ -104,6 +107,20 @@ class Payment implements IPayment
 	public function getTimestamp() : string
 	{
 		return $this->timestamp;
+	}
+
+	public function setTpay(bool $tpay = true) : Payment
+	{
+		if (!is_bool($tpay))
+			throw new \PaySys\PaySys\InvalidArgumentException(sprintf("TPAY must be boolean."));
+
+		$this->tpay = $tpay;
+		return $this;
+	}
+
+	public function getTpay() : bool
+	{
+		return $this->tpay;
 	}
 
 

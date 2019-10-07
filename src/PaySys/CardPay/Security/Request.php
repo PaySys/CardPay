@@ -31,8 +31,11 @@ final class Request
 			->appendQuery('VS=' . $payment->getVariableSymbol())
 			->appendQuery('RURL=' . $this->config->getRurl())
 			->appendQuery('IPC=' . $this->config->getIpc())
-			->appendQuery('NAME=' . $payment->getName())
-			->appendQuery('TIMESTAMP=' . $payment->getTimestamp())
+			->appendQuery('NAME=' . $payment->getName());
+		if ($payment->getTpay()) {
+			$url->appendQuery('TPAY=Y');
+		}
+		$url->appendQuery('TIMESTAMP=' . $payment->getTimestamp())
 			->appendQuery('HMAC=' . $this->getSign($payment));
 		return $url;
 	}
@@ -44,15 +47,19 @@ final class Request
 
 	public function getSignString(Payment $payment) : string
 	{
-		return $this->config->getMid()
+		$s = $this->config->getMid()
 			. $payment->getAmount()
 			. $payment->getCurrency()
 			. $payment->getVariableSymbol()
 			. $this->config->getRurl()
 			. $this->config->getIpc()
-			. $payment->getName()
-			. $this->config->getRem()
+			. $payment->getName();
+		if ($payment->getTpay()) {
+			$s .= 'Y';
+		}
+		$s .= $this->config->getRem()
 			. $payment->getTimestamp();
+		return $s;
 	}
 
 }
