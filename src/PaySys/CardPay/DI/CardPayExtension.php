@@ -34,12 +34,20 @@ class CardPayExtension extends CompilerExtension
 				$this->config['mode'],
 			]);
 
-		$builder->addFactoryDefinition($this->prefix('button'))
-			->setImplement('PaySys\CardPay\IButtonFactory')
-			->getResultDefinition()
-			->setFactory('PaySys\PaySys\Button', [
-				'config' => $this->prefix('@config'),
-			]);
+		if (method_exists($builder, 'addFactoryDefinition')) {
+			$builder->addFactoryDefinition($this->prefix('button'))
+				->setImplement('PaySys\CardPay\IButtonFactory')
+				->getResultDefinition()
+				->setFactory('PaySys\PaySys\Button', [
+					'config' => $this->prefix('@config'),
+				]);
+		} else {
+			$builder->addDefinition($this->prefix('button'))
+				->setImplement('PaySys\CardPay\IButtonFactory')
+				->setFactory('PaySys\PaySys\Button', [
+					'config' => $this->prefix('@config'),
+				]);
+		}
 
 		$builder->addDefinition($this->prefix('request'))
 			->setFactory('PaySys\CardPay\Security\Request');
