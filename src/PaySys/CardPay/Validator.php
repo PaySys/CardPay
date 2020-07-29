@@ -70,7 +70,7 @@ class Validator
 
 	public static function isName($s) : bool
 	{
-		return (is_string($s) && preg_match('/^[a-zA-Z0-9 \.\-_@]{1,30}$/', $s));
+		return (is_string($s) && preg_match('/^[a-zA-Z0-9 \.\-_@]{1,64}$/', $s));
 	}
 
 	public static function isTimestamp($s) : bool
