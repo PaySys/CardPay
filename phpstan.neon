@@ -1,0 +1,12 @@
+includes:
+	- vendor/phpstan/phpstan-nette/extension.neon
+	- vendor/phpstan/phpstan-nette/rules.neon
+
+parameters:
+	level: 5
+	fileExtensions:
+		- php
+		- phpt
+	paths:
+		- src
+		- tests

@@ -2,3 +2,6 @@ vendor
 composer.lock
 code-checker
 output/
+tests/output/
+tests/tmp/
+coverage.xml

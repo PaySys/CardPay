@@ -111,9 +111,6 @@ class Payment implements IPayment
 
 	public function setTpay(bool $tpay = true) : Payment
 	{
-		if (!is_bool($tpay))
-			throw new \PaySys\PaySys\InvalidArgumentException(sprintf("TPAY must be boolean."));
-
 		$this->tpay = $tpay;
 		return $this;
 	}

@@ -1,8 +1,7 @@
 # PaySys\CardPay
 
-[![Build Status](https://travis-ci.org/PaySys/CardPay.svg?branch=master)](https://travis-ci.org/PaySys/CardPay)
-[![Code Quality](https://scrutinizer-ci.com/g/PaySys/CardPay/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/PaySys/CardPay/)
-[![Code Coverage](https://scrutinizer-ci.com/g/PaySys/CardPay/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/PaySys/CardPay/)
+[![Tests](https://github.com/PaySys/CardPay/actions/workflows/tests.yml/badge.svg)](https://github.com/PaySys/CardPay/actions/workflows/tests.yml)
+[![Code Coverage](https://codecov.io/gh/PaySys/CardPay/branch/master/graph/badge.svg)](https://codecov.io/gh/PaySys/CardPay)
 [![Packagist](https://img.shields.io/packagist/v/PaySys/cardpay.svg)](https://packagist.org/packages/PaySys/CardPay)
 ![MIT](https://img.shields.io/badge/license-MIT-blue.svg)
 
@@ -10,7 +9,7 @@ Library for implement CardPay gateway ([v1.5 with HMAC & ECDSA](http://www.tatra
 
 ## Requirements
 
-Requires PHP 7.1 or later.
+Requires PHP 8.1 or later.
 
 Use universal libraty [PaySys\PaySys](https://github.com/PaySys/PaySys).
 

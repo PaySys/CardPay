@@ -42,7 +42,7 @@ final class Configuration implements IConfiguration
 	/** @var string */
 	private $rem = '';
 
-	/** @var LinkGenerator */
+	/** @var LinkGenerator|NULL */
 	private $linkGenerator;
 
 	/** @var string */
@@ -52,7 +52,7 @@ final class Configuration implements IConfiguration
 	private $buttonTemplate;
 
 
-	public function __construct(string $mid, $rurl, string $key, LinkGenerator $linkGenerator = NULL)
+	public function __construct(string $mid, $rurl, string $key, ?LinkGenerator $linkGenerator = NULL)
 	{
 		$this->linkGenerator = $linkGenerator;
 		$this->setMid($mid);
@@ -105,7 +105,7 @@ final class Configuration implements IConfiguration
 		return $this;
 	}
 
-	public function setIpc(string $ipc = NULL) : Configuration
+	public function setIpc(?string $ipc = NULL) : Configuration
 	{
 		if ($ipc === NULL) {
 			$ipc = $this->getIpAddress();

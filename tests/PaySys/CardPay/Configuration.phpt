@@ -96,8 +96,8 @@ class TestPresenter extends Nette\Application\UI\Presenter
 
 $config = new Configuration("111", "http://example.com", Nette\Utils\Random::generate(64), new Nette\Application\LinkGenerator(
 	new Nette\Application\Routers\SimpleRouter('Test:default'),
-	new Nette\Http\Url("http://example.com"),
-	new Nette\Application\PresenterFactory
+	new Nette\Http\UrlScript("http://example.com"),
+	(new Nette\Application\PresenterFactory)->setMapping(['*' => '*Presenter'])
 ));
 $config->setRurl("Test:test");
 Assert::same("http://example.com/?action=test", $config->getRurl());
