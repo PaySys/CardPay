@@ -71,6 +71,7 @@ final class Response
 			. (($parameters['RES'] === 'OK') ? $parameters['AC'] : '')
 			. @$parameters['TRES']
 			. @$parameters['CID']
+			. @$parameters['CC']
 			. @$parameters['RC']
 			. $parameters['TID']
 			. $parameters['TIMESTAMP'];
@@ -114,7 +115,7 @@ final class Response
 
 	private function checkParameters(array & $parameters)
 	{
-		foreach (['AMT', 'CURR', 'VS', 'RES', 'TID', 'TIMESTAMP', 'HMAC', 'ECDSA_KEY', 'ECDSA'] as $key) {
+		foreach (['AMT', 'CURR', 'VS', 'RES', 'TIMESTAMP', 'HMAC', 'ECDSA_KEY', 'ECDSA'] as $key) {
 			if (isset($parameters[$key])) {
 				$parameters[$key] = Strings::trim($parameters[$key]);
 			} else {
