@@ -12,6 +12,12 @@ final class Request
 	const SERVER_TEST = "https://moja.tatrabanka.sk/cgi-bin/e-commerce/start/example";
 	const SERVER_PRODUCTION = "https://moja.tatrabanka.sk/cgi-bin/e-commerce/start/cardpay";
 
+	/** @var string[]  mode => gateway URL */
+	private const SERVERS = [
+		Configuration::TEST => self::SERVER_TEST,
+		Configuration::PRODUCTION => self::SERVER_PRODUCTION,
+	];
+
 	/** @var Configuration */
 	protected $config;
 
@@ -23,8 +29,11 @@ final class Request
 
 	public function getUrl(Payment $payment) : Url
 	{
-		$s = $this->getSign($payment);
-		$url = new Url(constant("self::SERVER_" . strtoupper($this->config->getMode())));
+		$mode = $this->config->getMode();
+		if (!isset(self::SERVERS[$mode]))
+			throw new \PaySys\PaySys\ConfigurationException(sprintf("Mode '%s' has no gateway URL.", $mode));
+
+		$url = new Url(self::SERVERS[$mode]);
 		$url->appendQuery('MID=' . $this->config->getMid())
 			->appendQuery('AMT=' . $payment->getAmount())
 			->appendQuery('CURR=' . $payment->getCurrency())

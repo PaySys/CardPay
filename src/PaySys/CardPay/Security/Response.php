@@ -3,6 +3,7 @@
 namespace PaySys\CardPay\Security;
 
 use Nette;
+use Nette\Utils\Callback;
 use Nette\Utils\Strings;
 use PaySys\CardPay\Configuration;
 
@@ -12,6 +13,29 @@ final class Response
 	use Nette\SmartObject;
 
 	const PUBLIC_KEYS = "https://moja.tatrabanka.sk/e-commerce/ecdsa_keys.txt";
+
+	/** @var string[]  parameters required in every response and their expected format */
+	private const REQUIRED_PARAMETERS = [
+		'AMT' => '~^\d{1,9}(\.\d{1,2})?$~',
+		'CURR' => '~^\d{3}$~',
+		'VS' => '~^\d{1,10}$~',
+		'RES' => '~^[A-Z]{2,10}$~',
+		'TID' => '~^[a-zA-Z0-9]{1,20}$~',
+		'TIMESTAMP' => '~^\d{14}$~',
+		'HMAC' => '~^[0-9a-f]{64}$~i',
+		'ECDSA_KEY' => '~^\d{1,9}$~',
+		'ECDSA' => '~^([0-9a-f]{2}){1,256}$~i',
+	];
+
+	/** @var string[]  parameters which may be absent, but must match the format when present */
+	private const OPTIONAL_PARAMETERS = [
+		'TXN' => '~^[a-zA-Z0-9]{0,20}$~',
+		'AC' => '~^[a-zA-Z0-9]{0,20}$~',
+		'TRES' => '~^[A-Z]{0,10}$~',
+		'CID' => '~^[a-zA-Z0-9_-]{0,40}$~',
+		'CC' => '~^[0-9X*]{0,25}$~i',
+		'RC' => '~^[a-zA-Z0-9]{0,10}$~',
+	];
 
 	/** @var callable[]  function (array $parameters); Occurs on response from bank */
 	public $onResponse;
@@ -39,7 +63,7 @@ final class Response
 		try {
 			$this->checkParameters($parameters);
 
-			if ($parameters['HMAC'] !== $this->getHmac($parameters))
+			if (!hash_equals($this->getHmac($parameters), $parameters['HMAC']))
 				throw new \PaySys\PaySys\SignatureException('HMAC sign is not valid.');
 
 
@@ -66,13 +90,13 @@ final class Response
 		return $parameters['AMT']
 			. $parameters['CURR']
 			. $parameters['VS']
-			. @$parameters['TXN']
+			. ($parameters['TXN'] ?? '')
 			. $parameters['RES']
 			. (($parameters['RES'] === 'OK') ? $parameters['AC'] : '')
-			. @$parameters['TRES']
-			. @$parameters['CID']
-			. @$parameters['CC']
-			. @$parameters['RC']
+			. ($parameters['TRES'] ?? '')
+			. ($parameters['CID'] ?? '')
+			. ($parameters['CC'] ?? '')
+			. ($parameters['RC'] ?? '')
 			. $parameters['TID']
 			. $parameters['TIMESTAMP'];
 	}
@@ -85,7 +109,7 @@ final class Response
 
 	public function verified(array $parameters) : bool
 	{
-		$verified = openssl_verify($this->getSignString($parameters) . $parameters['HMAC'], pack("H*", $parameters['ECDSA']), $this->getPublicKey($parameters['ECDSA_KEY']), "sha256");
+		$verified = openssl_verify($this->getSignString($parameters) . $parameters['HMAC'], pack("H*", $parameters['ECDSA']), $this->getPublicKey((int) $parameters['ECDSA_KEY']), "sha256");
 
 		if ($verified === -1) {
 			throw new \PaySys\PaySys\SignatureException(sprintf("Error while verify bank response: %s", openssl_error_string()));
@@ -96,31 +120,65 @@ final class Response
 
 	public function getPublicKey(int $id) : string
 	{
-		foreach (explode("\r\n\r\n", file_get_contents(self::PUBLIC_KEYS)) as $source) {
-			preg_match('/KEY_ID: (\d+)/', $source, $tmp);
-			$key_id = (int) $tmp[1];
+		foreach (preg_split('~(?:\r?\n){2,}~', $this->fetchPublicKeys()) as $source) {
+			if (!preg_match('~^KEY_ID:[ \t]*(\d+)[ \t\r]*$~m', $source, $tmp))
+				continue;
 
-			if ($key_id === $id) {
-				if ((bool) Strings::match($source, '~VALID+~')) {
+			if ((int) $tmp[1] !== $id)
+				continue;
 
-					preg_match_all("/-----BEGIN PUBLIC KEY-----(.*)-----END PUBLIC KEY-----/msU", $source, $key);
-					return Strings::trim($key[0][0]);
+			if (!preg_match('~^STATUS:[ \t]*VALID[ \t\r]*$~m', $source))
+				throw new \PaySys\PaySys\ServerException(sprintf("Key '%d' is not valid.", $id));
 
-				} else {
-					throw new \PaySys\PaySys\ServerException(sprintf("Key '%d' was revoked.", $id));
-				}
-			}
+			if (!preg_match('~-----BEGIN PUBLIC KEY-----.*-----END PUBLIC KEY-----~sU', $source, $key))
+				throw new \PaySys\PaySys\ServerException(sprintf("Key '%d' does not contain public key.", $id));
+
+			return Strings::trim($key[0]);
 		}
+
+		throw new \PaySys\PaySys\ServerException(sprintf("Key '%d' was not found.", $id));
+	}
+
+	private function fetchPublicKeys() : string
+	{
+		$content = Callback::invokeSafe('file_get_contents', [self::PUBLIC_KEYS], function ($message) {
+			throw new \PaySys\PaySys\ServerException(sprintf("Unable to download public keys from '%s': %s", self::PUBLIC_KEYS, $message));
+		});
+
+		if (!is_string($content) || $content === '')
+			throw new \PaySys\PaySys\ServerException(sprintf("Public keys from '%s' are empty.", self::PUBLIC_KEYS));
+
+		return $content;
 	}
 
 	private function checkParameters(array & $parameters)
 	{
-		foreach (['AMT', 'CURR', 'VS', 'RES', 'TIMESTAMP', 'HMAC', 'ECDSA_KEY', 'ECDSA'] as $key) {
-			if (isset($parameters[$key])) {
-				$parameters[$key] = Strings::trim($parameters[$key]);
-			} else {
+		foreach (self::REQUIRED_PARAMETERS as $key => $pattern) {
+			if (!isset($parameters[$key]))
 				throw new \PaySys\PaySys\ServerException(sprintf("Missing parameter '%s'.", $key));
-			}
+
+			$parameters[$key] = $this->checkParameter($key, $parameters[$key], $pattern);
 		}
+
+		foreach (self::OPTIONAL_PARAMETERS as $key => $pattern) {
+			if (isset($parameters[$key]))
+				$parameters[$key] = $this->checkParameter($key, $parameters[$key], $pattern);
+		}
+
+		if ($parameters['RES'] === 'OK' && !isset($parameters['AC']))
+			throw new \PaySys\PaySys\ServerException("Missing parameter 'AC'.");
+	}
+
+	private function checkParameter(string $key, $value, string $pattern) : string
+	{
+		if (!is_string($value))
+			throw new \PaySys\PaySys\ServerException(sprintf("Parameter '%s' must be a string, %s given.", $key, gettype($value)));
+
+		$value = Strings::trim($value);
+
+		if (!preg_match($pattern, $value))
+			throw new \PaySys\PaySys\ServerException(sprintf("Parameter '%s' has invalid format.", $key));
+
+		return $value;
 	}
 }

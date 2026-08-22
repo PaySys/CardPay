@@ -99,7 +99,7 @@ final class Configuration implements IConfiguration
 	{
 		$key = $this->getNormalizedKey($originalKey);
 		if (!Validator::isKey($key))
-			throw new \PaySys\PaySys\ConfigurationException(sprintf("Key '%s' is invalid. Must have 64 byte standard string or 128 byte in hexadecimal format.", $originalKey));
+			throw new \PaySys\PaySys\ConfigurationException(sprintf("Key is invalid. Must have 64 byte standard string or 128 byte in hexadecimal format, %d bytes given.", strlen($originalKey)));
 
 		$this->key = $key;
 		return $this;
