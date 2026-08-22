@@ -20,7 +20,6 @@ final class Response
 		'CURR' => '~^\d{3}$~',
 		'VS' => '~^\d{1,10}$~',
 		'RES' => '~^[A-Z]{2,10}$~',
-		'TID' => '~^[a-zA-Z0-9]{1,20}$~',
 		'TIMESTAMP' => '~^\d{14}$~',
 		'HMAC' => '~^[0-9a-f]{64}$~i',
 		'ECDSA_KEY' => '~^\d{1,9}$~',
@@ -35,6 +34,8 @@ final class Response
 		'CID' => '~^[a-zA-Z0-9_-]{0,40}$~',
 		'CC' => '~^[0-9X*]{0,25}$~i',
 		'RC' => '~^[a-zA-Z0-9]{0,10}$~',
+		// the bank omits TID on some unsuccessful payments
+		'TID' => '~^[a-zA-Z0-9]{0,20}$~',
 	];
 
 	/** @var callable[]  function (array $parameters); Occurs on response from bank */
@@ -97,7 +98,7 @@ final class Response
 			. ($parameters['CID'] ?? '')
 			. ($parameters['CC'] ?? '')
 			. ($parameters['RC'] ?? '')
-			. $parameters['TID']
+			. ($parameters['TID'] ?? '')
 			. $parameters['TIMESTAMP'];
 	}
 

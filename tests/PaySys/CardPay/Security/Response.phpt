@@ -40,3 +40,26 @@ Assert::same("20.7897878945210OK8324567801112014100000", $response->getSignStrin
 Assert::same("9fbf5a7d1a914d7806a545565b971fa480feb48e402f7a8df80dcea0fdea6049", $response->getHmac($r));
 
 //Assert::true($response->verified($r));
+
+
+// the bank omits TID on some unsuccessful payments, the field is then left out
+// of the signed string exactly as the bank leaves it out
+$failed = [
+	'AMT' => '20.78',
+	'CURR' => '978',
+	'VS' => '78945210',
+	'RES' => 'FAIL',
+	'TIMESTAMP' => '01112014100000',
+	'ECDSA_KEY' => '1',
+	'ECDSA' => '3045',
+];
+
+Assert::same("20.7897878945210FAIL01112014100000", $response->getSignString($failed));
+Assert::same($response->getSignString($failed + ['TID' => '']), $response->getSignString($failed));
+Assert::notSame($response->getSignString($failed + ['TID' => '45678']), $response->getSignString($failed));
+
+// a missing TID must not be rejected as a damaged response; with a wrong HMAC the
+// check stops at the signature, so no public key is downloaded here
+Assert::exception(function () use ($response, $failed) {
+	$response->paid($failed + ['HMAC' => str_repeat('0', 64)]);
+}, PaySys\PaySys\SignatureException::class, 'HMAC sign is not valid.');
